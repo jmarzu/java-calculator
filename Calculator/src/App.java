@@ -100,6 +100,10 @@ public class App extends Application {
         btn9.setOnAction(e -> getButtonValue("9"));
         GridPane.setConstraints(btn9, 2, 3);
 
+        Button btnMultiply = new Button("*");
+        btnMultiply.setOnAction(e -> getButtonValue(" * "));
+        GridPane.setConstraints(btnMultiply, 3, 3);
+
         // row 4
         Button btnMinus = new Button("-");
         btnMinus.setOnAction(e -> getButtonValue(" - "));
@@ -113,7 +117,11 @@ public class App extends Application {
         btnAdd.setOnAction(e -> getButtonValue(" + "));
         GridPane.setConstraints(btnAdd, 2, 4);
 
-        grid.getChildren().addAll(textField, btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMinus, btnAdd, btnClear, btnEquals);
+        Button btnDivide = new Button("/");
+        btnDivide.setOnAction(e -> getButtonValue(" / "));
+        GridPane.setConstraints(btnDivide, 3, 4);
+
+        grid.getChildren().addAll(textField, btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMinus, btnAdd, btnClear, btnEquals, btnMultiply, btnDivide);
 
         topOfCalculator.getChildren().addAll(textField, result);
         
@@ -155,9 +163,13 @@ public class App extends Application {
     private void evaluateCalculator() throws ScriptException {
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
         ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("JavaScript");
-        
-        Object answer = scriptEngine.eval(calcString);
-        result.setText(calcString + " = " + answer.toString());
+
+        if (Character.isDigit(calcString.charAt(0)) && Character.isDigit(calcString.charAt(calcString.length()-1))) {
+            Object answer = scriptEngine.eval(calcString);
+            result.setText(calcString + " = " + answer.toString());
+        } else {
+            throw new ScriptException("Incorrect format for the calcuator");
+        }
 
         // clean up calculator
         clearTextField();
